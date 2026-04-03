@@ -1,0 +1,183 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  CLIENT
+  PROFESSIONAL
+  COMPANY_OWNER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  PENDING_CLIENT_CONFIRMATION
+  PENDING_PROFESSIONAL_CONFIRMATION
+  CONFIRMED
+  CANCELLED
+  COMPLETED
+  NO_SHOW
+  REJECTED
+}
+
+enum ExceptionType {
+  BLOCK
+  BREAK
+}
+
+model User {
+  id                       String                @id @default(uuid())
+  email                    String                @unique
+  phone                    String?
+  name                     String
+  password                 String
+  role                     UserRole              @default(CLIENT)
+  companyId                String?
+  displayName              String?
+  createdAt                DateTime              @default(now())
+  updatedAt                DateTime              @updatedAt
+  ownedCompany             Company[]             @relation("CompanyOwner")
+  professionalCompany      Company?              @relation("CompanyProfessionals", fields: [companyId], references: [id], onDelete: SetNull)
+  professionalServices     ProfessionalService[]
+  availabilities           Availability[]        @relation("ProfessionalAvailability")
+  scheduleExceptions       ScheduleException[]   @relation("ProfessionalExceptions")
+  clientAppointments       Appointment[]         @relation("ClientAppointments")
+  professionalAppointments Appointment[]         @relation("ProfessionalAppointments")
+  refreshSessions          RefreshSession[]
+
+  @@index([companyId])
+}
+
+model RefreshSession {
+  id        String    @id @default(uuid())
+  userId    String
+  tokenHash String    @unique
+  expiresAt DateTime
+  revokedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model Company {
+  id            String        @id @default(uuid())
+  name          String
+  slug          String        @unique
+  phone         String?
+  ownerId       String
+  timezone      String
+  autoConfirm   Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  owner         User          @relation("CompanyOwner", fields: [ownerId], references: [id], onDelete: Restrict)
+  professionals User[]        @relation("CompanyProfessionals")
+  services      Service[]
+  appointments  Appointment[]
+
+  @@index([ownerId])
+}
+
+model Service {
+  id                   String                @id @default(uuid())
+  companyId            String
+  name                 String
+  description          String?
+  duration             Int
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  company              Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  professionalServices ProfessionalService[]
+  appointments         Appointment[]
+
+  @@index([companyId])
+}
+
+model ProfessionalService {
+  id             String   @id @default(uuid())
+  professionalId String
+  serviceId      String
+  price          Float
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  professional   User     @relation(fields: [professionalId], references: [id], onDelete: Cascade)
+  service        Service  @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@unique([professionalId, serviceId])
+  @@index([professionalId])
+  @@index([serviceId])
+}
+
+model Availability {
+  id             String   @id @default(uuid())
+  professionalId String
+  weekday        Int
+  startTime      String
+  endTime        String
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  professional   User     @relation("ProfessionalAvailability", fields: [professionalId], references: [id], onDelete: Cascade)
+
+  @@unique([professionalId, weekday, startTime, endTime])
+  @@index([professionalId])
+  @@index([professionalId, weekday])
+}
+
+model Appointment {
+  id                  String            @id @default(uuid())
+  companyId           String
+  clientId            String
+  professionalId      String
+  serviceId           String
+  date                DateTime
+  startTime           String
+  endTime             String
+  price               Float
+  status              AppointmentStatus @default(SCHEDULED)
+  pendingApprovalFrom UserRole?
+  createdByRole       UserRole
+  createdByUserId     String
+  rejectionReason     String?
+  rejectedByUserId    String?
+  rejectedAt          DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  company             Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  client              User              @relation("ClientAppointments", fields: [clientId], references: [id], onDelete: Cascade)
+  professional        User              @relation("ProfessionalAppointments", fields: [professionalId], references: [id], onDelete: Cascade)
+  service             Service           @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+
+  @@index([companyId])
+  @@index([clientId])
+  @@index([professionalId])
+  @@index([serviceId])
+  @@index([status, date, endTime])
+  @@index([pendingApprovalFrom])
+}
+
+model ScheduleException {
+  id             String        @id @default(uuid())
+  professionalId String
+  type           ExceptionType
+  startDate      DateTime
+  endDate        DateTime
+  title          String
+  description    String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  professional   User          @relation("ProfessionalExceptions", fields: [professionalId], references: [id], onDelete: Cascade)
+
+  @@index([professionalId])
+  @@index([startDate])
+  @@index([endDate])
+}
