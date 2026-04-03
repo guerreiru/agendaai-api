@@ -1,0 +1,100 @@
+import { Router } from "express";
+import {
+  createAppointmentController,
+  deleteAppointmentController,
+  getAppointmentController,
+  listAppointmentsController,
+  updateAppointmentController,
+  confirmAppointmentController,
+  rejectAppointmentController,
+} from "../controllers/appointment.controller";
+import { authMiddleware, requireRoles } from "../middlewares/auth.middleware";
+
+const router: Router = Router();
+
+router.post(
+  "/appointments",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  createAppointmentController,
+);
+router.get(
+  "/appointments",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  listAppointmentsController,
+);
+router.get(
+  "/appointments/:id",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  getAppointmentController,
+);
+router.patch(
+  "/appointments/:id",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  updateAppointmentController,
+);
+router.delete(
+  "/appointments/:id",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  deleteAppointmentController,
+);
+router.post(
+  "/appointments/:id/confirm",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  confirmAppointmentController,
+);
+router.post(
+  "/appointments/:id/reject",
+  authMiddleware,
+  requireRoles(
+    "CLIENT",
+    "PROFESSIONAL",
+    "COMPANY_OWNER",
+    "ADMIN",
+    "SUPER_ADMIN",
+  ),
+  rejectAppointmentController,
+);
+
+export { router as appointmentRouter };
