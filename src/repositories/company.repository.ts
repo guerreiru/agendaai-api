@@ -45,6 +45,24 @@ export async function findCompanyPublicProfileBySlug(slug: string) {
   });
 }
 
+export async function findPublicCompaniesBySearch(searchTerm?: string) {
+  const where = searchTerm?.trim()
+    ? { name: { contains: searchTerm.trim(), mode: "insensitive" as const } }
+    : {};
+
+  return prisma.company.findMany({
+    where,
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      phone: true,
+    },
+    orderBy: { name: "asc" },
+    take: 20,
+  });
+}
+
 export async function findCompanies() {
   return prisma.company.findMany({
     orderBy: { createdAt: "desc" },
