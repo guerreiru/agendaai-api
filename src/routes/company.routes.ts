@@ -5,6 +5,7 @@ import {
   getCompanyController,
   getPublicCompanyBySlugController,
   listCompaniesController,
+  searchPublicCompaniesController,
   updateCompanyController,
 } from "../controllers/company.controller";
 import { authMiddleware, requireRoles } from "../middlewares/auth.middleware";
@@ -17,6 +18,7 @@ router.post(
   requireRoles("COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
   createCompanyController,
 );
+router.get("/agendaai", searchPublicCompaniesController);
 router.get("/agendaai/:slug", getPublicCompanyBySlugController);
 router.get("/companies", listCompaniesController);
 router.get("/companies/:id", getCompanyController);
