@@ -5,6 +5,7 @@ import {
   findCompanyById,
   findCompanyPublicProfileBySlug,
   findCompanyBySlug,
+  findPublicCompaniesBySearch,
   updateCompany,
 } from "../repositories/company.repository";
 import { findProfessionalServicesByCompany } from "../repositories/professional-service.repository";
@@ -79,6 +80,10 @@ export async function getCompany(id: string) {
   }
 
   return company;
+}
+
+export async function searchPublicCompanies(q?: string) {
+  return findPublicCompaniesBySearch(q);
 }
 
 export async function getPublicCompanyBySlug(slug: string) {
