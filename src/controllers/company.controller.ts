@@ -5,6 +5,7 @@ import {
   getCompany,
   getPublicCompanyBySlug,
   listCompanies,
+  searchPublicCompanies,
   updateCompanyAccount,
 } from "../services/company.service";
 import type { UserRole } from "../types/user";
@@ -62,6 +63,22 @@ export async function getCompanyController(
 
     const company = await getCompany(id.trim());
     return response.status(200).json(company);
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function searchPublicCompaniesController(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  try {
+    const { q } = request.query;
+    const searchTerm = isString(q) ? q : undefined;
+
+    const companies = await searchPublicCompanies(searchTerm);
+    return response.status(200).json(companies);
   } catch (error) {
     next(error);
   }
