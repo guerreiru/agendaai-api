@@ -7,7 +7,10 @@ export function validateCreateCompanyBody(body: unknown): CreateCompanyBody {
     throw new AppError("Invalid request body.", 400);
   }
 
-  const { name, slug, ownerId, timezone } = body as Record<string, unknown>;
+  const { name, slug, ownerId, timezone, phone } = body as Record<
+    string,
+    unknown
+  >;
 
   if (!isString(name) || !name.trim()) {
     throw new AppError("The company name is required.", 400);
@@ -25,11 +28,16 @@ export function validateCreateCompanyBody(body: unknown): CreateCompanyBody {
     throw new AppError("The timezone is required.", 400);
   }
 
+  if (phone !== undefined && phone !== null && !isString(phone)) {
+    throw new AppError("The phone must be a string or null.", 400);
+  }
+
   return {
     name: name.trim(),
     slug: slug.trim().toLowerCase(),
     ownerId: ownerId.trim(),
     timezone: timezone.trim(),
+    phone: phone?.trim() ?? null,
   };
 }
 
@@ -38,7 +46,10 @@ export function validateUpdateCompanyBody(body: unknown): UpdateCompanyBody {
     throw new AppError("Invalid request body.", 400);
   }
 
-  const { name, slug, ownerId, timezone } = body as Record<string, unknown>;
+  const { name, slug, ownerId, timezone, phone } = body as Record<
+    string,
+    unknown
+  >;
   const data: UpdateCompanyBody = {};
 
   if (name !== undefined) {
@@ -67,6 +78,13 @@ export function validateUpdateCompanyBody(body: unknown): UpdateCompanyBody {
       throw new AppError("The timezone cannot be empty.", 400);
     }
     data.timezone = timezone.trim();
+  }
+
+  if (phone !== undefined) {
+    if (phone !== null && !isString(phone)) {
+      throw new AppError("The phone must be a string or null.", 400);
+    }
+    data.phone = phone?.trim() ?? null;
   }
 
   if (Object.keys(data).length === 0) {
