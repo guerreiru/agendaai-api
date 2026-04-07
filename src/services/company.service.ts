@@ -13,6 +13,7 @@ import { findUserById } from "../repositories/user.repository";
 import type { CreateCompanyInput, UpdateCompanyInput } from "../types/company";
 import type { UserRole } from "../types/user";
 import { AppError } from "../utils/app-error";
+import { isString } from "../utils/isString";
 
 export type CompanyActorContext = {
   actorId: string;
@@ -66,6 +67,7 @@ export async function createCompanyAccount(
     slug,
     ownerId: input.ownerId,
     timezone: input.timezone.trim(),
+    phone: input.phone?.trim() ?? null,
   });
 }
 
@@ -225,6 +227,13 @@ export async function updateCompanyAccount(
 
   if (Object.keys(data).length === 0) {
     throw new AppError("At least one field must be provided to update.", 400);
+  }
+
+  if (input.phone !== undefined) {
+    if (input.phone !== null && !isString(input.phone)) {
+      throw new AppError("The phone must be a string or null.", 400);
+    }
+    data.phone = input.phone?.trim() ?? null;
   }
 
   return updateCompany(id, data);
