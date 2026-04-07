@@ -3,6 +3,7 @@ export type CreateCompanyInput = {
   slug: string;
   ownerId: string;
   timezone: string;
+  phone?: string | null;
 };
 
 export type UpdateCompanyInput = {
@@ -10,6 +11,7 @@ export type UpdateCompanyInput = {
   slug?: string;
   ownerId?: string;
   timezone?: string;
+  phone?: string | null;
 };
 
 export type CreateCompanyBody = CreateCompanyInput;
