@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist",
+    "sourceMap": false,
+    "declaration": false,
+    "declarationMap": false,
+    "inlineSources": false,
+    "sourceRoot": ""
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "tests/**",
+    "coverage/**",
+    "dist/**",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "vitest.config.ts",
+    "prisma.config.ts"
+  ]
+}
