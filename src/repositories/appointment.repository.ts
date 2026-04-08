@@ -1,9 +1,9 @@
-import { prisma } from "../lib/prisma";
+import type { AppointmentStatus } from "../../generated/prisma/enums.js";
+import { prisma } from "../lib/prisma.js";
 import type {
   CreateAppointmentInput,
   UpdateAppointmentInput,
-  AppointmentStatus,
-} from "../types/appointment";
+} from "../types/appointment.js";
 
 export async function findAppointmentById(id: string) {
   return prisma.appointment.findUnique({
@@ -106,7 +106,7 @@ export async function findConflictingAppointments(
   const dateEnd = new Date(date);
   dateEnd.setHours(23, 59, 59, 999);
 
-  const query: any = {
+  const baseQuery = {
     professionalId,
     date: {
       gte: dateStart,
@@ -119,13 +119,13 @@ export async function findConflictingAppointments(
       gt: startTime,
     },
     status: {
-      in: ["SCHEDULED", "CONFIRMED", "COMPLETED"],
+      in: ["SCHEDULED", "CONFIRMED", "COMPLETED"] as AppointmentStatus[],
     },
   };
 
-  if (excludeId) {
-    query.NOT = { id: excludeId };
-  }
+  const query = excludeId
+    ? { ...baseQuery, NOT: { id: excludeId } }
+    : baseQuery;
 
   return prisma.appointment.findMany({
     where: query,

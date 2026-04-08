@@ -1,16 +1,11 @@
+import { Router } from "express";
 import {
-  Router,
-  type Request,
-  type Response,
-  type NextFunction,
-} from "express";
-import {
-  loginController,
-  refreshTokenController,
-  getCurrentUserController,
-  logoutController,
-} from "../controllers/auth.controller";
-import { authMiddleware } from "../middlewares/auth.middleware";
+	getCurrentUserController,
+	loginController,
+	logoutController,
+	refreshTokenController,
+} from "../controllers/auth.controller.js";
+import { authMiddleware } from "../middlewares/auth.middleware.js";
 
 const authRouter: Router = Router();
 

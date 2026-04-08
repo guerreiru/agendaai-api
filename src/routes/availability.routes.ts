@@ -1,49 +1,49 @@
 import { Router } from "express";
 import {
-  createAvailabilityController,
-  deleteAvailabilityController,
-  getAvailabilityController,
-  listAvailabilitiesController,
-  listProfessionalAvailabilitiesController,
-  updateAvailabilityController,
-} from "../controllers/availability.controller";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware";
+	createAvailabilityController,
+	deleteAvailabilityController,
+	getAvailabilityController,
+	listAvailabilitiesController,
+	listProfessionalAvailabilitiesController,
+	updateAvailabilityController,
+} from "../controllers/availability.controller.js";
+import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
 
 const router: Router = Router();
 
 router.post(
-  "/availabilities",
-  authMiddleware,
-  requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
-  createAvailabilityController,
+	"/availabilities",
+	authMiddleware,
+	requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
+	createAvailabilityController,
 );
 router.get(
-  "/availabilities",
-  authMiddleware,
-  requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
-  listAvailabilitiesController,
+	"/availabilities",
+	authMiddleware,
+	requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
+	listAvailabilitiesController,
 );
 router.get(
-  "/professionals/:professionalId/availabilities",
-  listProfessionalAvailabilitiesController,
+	"/professionals/:professionalId/availabilities",
+	listProfessionalAvailabilitiesController,
 );
 router.get(
-  "/availabilities/:id",
-  authMiddleware,
-  requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
-  getAvailabilityController,
+	"/availabilities/:id",
+	authMiddleware,
+	requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
+	getAvailabilityController,
 );
 router.patch(
-  "/availabilities/:id",
-  authMiddleware,
-  requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
-  updateAvailabilityController,
+	"/availabilities/:id",
+	authMiddleware,
+	requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
+	updateAvailabilityController,
 );
 router.delete(
-  "/availabilities/:id",
-  authMiddleware,
-  requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
-  deleteAvailabilityController,
+	"/availabilities/:id",
+	authMiddleware,
+	requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
+	deleteAvailabilityController,
 );
 
 export { router as availabilityRouter };

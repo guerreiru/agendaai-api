@@ -1,7 +1,7 @@
-import { AppError } from "../utils/app-error";
-import { isString } from "../utils/isString";
-import { normalizePhoneToE164 } from "../utils/phone";
-import type { CreateUserBody, UpdateUserBody } from "../types/user";
+import type { CreateUserBody, UpdateUserBody } from "../types/user.js";
+import { AppError } from "../utils/app-error.js";
+import { isString } from "../utils/isString.js";
+import { normalizePhoneToE164 } from "../utils/phone.js";
 
 const userRoles = [
   "CLIENT",
@@ -19,7 +19,7 @@ export function validateCreateUserBody(body: unknown): CreateUserBody {
   }
 
   const { name, email, phone, password, role, companyId, displayName } =
-    body as Record<string, unknown>;
+    body as CreateUserBody;
 
   if (!isString(name) || !name.trim()) {
     throw new AppError("The name is required.", 400);
@@ -103,7 +103,7 @@ export function validateUpdateUserBody(body: unknown): UpdateUserBody {
   }
 
   const { name, email, phone, password, role, companyId, displayName } =
-    body as Record<string, unknown>;
+    body as CreateUserBody;
   const data: UpdateUserBody = {};
 
   if (name !== undefined) {
@@ -144,7 +144,7 @@ export function validateUpdateUserBody(body: unknown): UpdateUserBody {
   }
 
   if (role !== undefined) {
-    if (!isString(role) || !userRoles.includes(role as never)) {
+    if (!isString(role) || !userRoles.includes(role as UserRole)) {
       throw new AppError("Invalid user role.", 400);
     }
     data.role = role as UserRole;
@@ -171,7 +171,7 @@ export function validateUpdateUserBody(body: unknown): UpdateUserBody {
   return data;
 }
 
-export function validateSearchUsersQuery(query: unknown): string {
+export function validateSearchUsersQuery(query: string): string {
   if (!isString(query) || !query.trim()) {
     throw new AppError("Query is required.", 400);
   }

@@ -7,15 +7,15 @@ import {
   searchClientUsersByEmailOrPhone,
   signUpUser,
   updateUserAccount,
-} from "../services/user.service";
-import type { UserRole } from "../types/user";
-import { AppError } from "../utils/app-error";
-import { isString } from "../utils/isString";
+} from "../services/user.service.js";
+import type { UserRole } from "../types/user.js";
+import { AppError } from "../utils/app-error.js";
+import { isString } from "../utils/isString.js";
 import {
   validateCreateUserBody,
   validateSearchUsersQuery,
   validateUpdateUserBody,
-} from "../validators/user.validator";
+} from "../validators/user.validator.js";
 
 export async function createUser(
   request: Request,
@@ -171,7 +171,10 @@ export async function searchUsersController(
       throw new AppError("Authentication required.", 401);
     }
 
-    const query = validateSearchUsersQuery(request.query.query);
+    const rawQuery = request.query.query;
+    const query = validateSearchUsersQuery(
+      typeof rawQuery === "string" ? rawQuery : "",
+    );
     const users = await searchClientUsersByEmailOrPhone(query, {
       actorId: request.userId,
       actorRole: request.userRole as UserRole,
