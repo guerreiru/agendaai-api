@@ -4,6 +4,7 @@ import {
   createClientAppointment,
   confirmAppointment,
   rejectAppointment,
+  cancelAppointment,
 } from "../../src/services/appointment.service";
 
 describe("Appointment Confirmation Flow", () => {
@@ -229,6 +230,9 @@ describe("Appointment Confirmation Flow", () => {
         { actorId: client.id, actorRole: "CLIENT" },
       );
 
+      expect(appt.confirmedAt).toBeNull();
+      expect(appt.confirmedByUserId).toBeNull();
+
       const confirmed = await confirmAppointment(appt.id, {
         actorId: professional.id,
         actorRole: "PROFESSIONAL",
@@ -236,6 +240,8 @@ describe("Appointment Confirmation Flow", () => {
 
       expect(confirmed.status).toBe("CONFIRMED");
       expect(confirmed.pendingApprovalFrom).toBeNull();
+      expect(confirmed.confirmedAt).not.toBeNull();
+      expect(confirmed.confirmedByUserId).toBe(professional.id);
     });
 
     it("CLIENT confirms PENDING_CLIENT_CONFIRMATION", async () => {
@@ -259,6 +265,8 @@ describe("Appointment Confirmation Flow", () => {
 
       expect(confirmed.status).toBe("CONFIRMED");
       expect(confirmed.pendingApprovalFrom).toBeNull();
+      expect(confirmed.confirmedAt).not.toBeNull();
+      expect(confirmed.confirmedByUserId).toBe(client.id);
     });
 
     it("prevents wrong role from confirming", async () => {
@@ -302,6 +310,9 @@ describe("Appointment Confirmation Flow", () => {
         { actorId: professional.id, actorRole: "PROFESSIONAL" },
       );
 
+      expect(appt.rejectedAt).toBeNull();
+      expect(appt.rejectedByUserId).toBeNull();
+
       const rejected = await rejectAppointment(
         appt.id,
         { rejectionReason: "Not available" },
@@ -311,6 +322,7 @@ describe("Appointment Confirmation Flow", () => {
       expect(rejected.status).toBe("REJECTED");
       expect(rejected.rejectionReason).toBe("Not available");
       expect(rejected.rejectedByUserId).toBe(client.id);
+      expect(rejected.rejectedAt).not.toBeNull();
     });
 
     it("PROFESSIONAL rejects PENDING_PROFESSIONAL_CONFIRMATION", async () => {
@@ -436,6 +448,104 @@ describe("Appointment Confirmation Flow", () => {
         expect(error.message).toContain(
           "Selected time is outside professional availability",
         );
+      }
+    });
+  });
+
+  describe("Cancellations", () => {
+    it("CLIENT cancels SCHEDULED appointment with reason", async () => {
+      const appt = await createClientAppointment(
+        {
+          companyId: companyWithoutAutoConfirm.id,
+          clientId: client.id,
+          professionalId: professional.id,
+          serviceId: service.id,
+          date: new Date("2026-06-22T00:00:00Z"),
+          startTime: "10:00",
+          endTime: "10:30",
+        },
+        { actorId: client.id, actorRole: "CLIENT" },
+      );
+
+      expect(appt.cancelledAt).toBeNull();
+      expect(appt.cancelledByUserId).toBeNull();
+      expect(appt.cancelReason).toBeNull();
+
+      const cancelled = await cancelAppointment(
+        appt.id,
+        { cancelReason: "Client cannot travel" },
+        { actorId: client.id, actorRole: "CLIENT" },
+      );
+
+      expect(cancelled.status).toBe("CANCELLED");
+      expect(cancelled.cancelledByUserId).toBe(client.id);
+      expect(cancelled.cancelReason).toBe("Client cannot travel");
+      expect(cancelled.cancelledAt).not.toBeNull();
+    });
+
+    it("PROFESSIONAL cancels CONFIRMED appointment", async () => {
+      const appt = await createClientAppointment(
+        {
+          companyId: companyWithoutAutoConfirm.id,
+          clientId: client.id,
+          professionalId: professional.id,
+          serviceId: service.id,
+          date: new Date("2026-06-29T00:00:00Z"),
+          startTime: "11:00",
+          endTime: "11:30",
+        },
+        { actorId: client.id, actorRole: "CLIENT" },
+      );
+
+      await confirmAppointment(appt.id, {
+        actorId: professional.id,
+        actorRole: "PROFESSIONAL",
+      });
+
+      const cancelled = await cancelAppointment(
+        appt.id,
+        { cancelReason: "Professional emergency" },
+        { actorId: professional.id, actorRole: "PROFESSIONAL" },
+      );
+
+      expect(cancelled.status).toBe("CANCELLED");
+      expect(cancelled.cancelledByUserId).toBe(professional.id);
+      expect(cancelled.cancelReason).toBe("Professional emergency");
+    });
+
+    it("prevents canceling COMPLETED appointment", async () => {
+      const appt = await createClientAppointment(
+        {
+          companyId: companyWithoutAutoConfirm.id,
+          clientId: client.id,
+          professionalId: professional.id,
+          serviceId: service.id,
+          date: new Date("2026-07-06T00:00:00Z"),
+          startTime: "15:00",
+          endTime: "15:30",
+        },
+        { actorId: client.id, actorRole: "CLIENT" },
+      );
+
+      await confirmAppointment(appt.id, {
+        actorId: professional.id,
+        actorRole: "PROFESSIONAL",
+      });
+
+      await prisma.appointment.update({
+        where: { id: appt.id },
+        data: { status: "COMPLETED", completedAt: new Date() },
+      });
+
+      try {
+        await cancelAppointment(
+          appt.id,
+          { cancelReason: "Too late" },
+          { actorId: client.id, actorRole: "CLIENT" },
+        );
+        expect.fail("Should have thrown");
+      } catch (error: any) {
+        expect(error.message).toContain("already finalized");
       }
     });
   });
