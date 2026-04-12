@@ -34,7 +34,16 @@ export async function findUserById(id: string) {
 			password: true,
 		},
 		include: {
-			ownedCompany: true,
+			ownedCompany: {
+				include: {
+					services: true,
+					professionals: {
+						omit: {
+							password: true,
+						}
+					}
+				},
+			},
 			professionalServices: true,
 		},
 	});
