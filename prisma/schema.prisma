@@ -147,6 +147,14 @@ model Appointment {
   pendingApprovalFrom UserRole?
   createdByRole       UserRole
   createdByUserId     String
+  confirmedAt         DateTime?
+  confirmedByUserId   String?
+  completedAt         DateTime?
+  cancelledByUserId   String?
+  cancelledAt         DateTime?
+  cancelReason        String?
+  clientNotes         String?
+  professionalNotes   String?
   rejectionReason     String?
   rejectedByUserId    String?
   rejectedAt          DateTime?
