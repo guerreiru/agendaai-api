@@ -1,15 +1,13 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as availabilityRepository from '../../src/repositories/availability.repository';
+import * as userRepository from '../../src/repositories/user.repository';
 import {
-  createProfessionalAvailability,
-  deleteProfessionalAvailability,
-  getAvailability,
-  listAllAvailabilities,
-  listProfessionalAvailabilities,
-  updateProfessionalAvailability,
-} from "../../src/services/availability.service";
-import * as availabilityRepository from "../../src/repositories/availability.repository";
-import * as userRepository from "../../src/repositories/user.repository";
+    createProfessionalAvailabilitiesBulk, createProfessionalAvailability,
+    deleteProfessionalAvailability, getAvailability, listAllAvailabilities,
+    listProfessionalAvailabilities, updateProfessionalAvailability
+} from '../../src/services/availability.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/repositories/availability.repository");
 vi.mock("../../src/repositories/user.repository");
@@ -39,6 +37,47 @@ describe("availability.service", () => {
     });
 
     expect(result.id).toBe("a-1");
+  });
+
+  it("creates availabilities in bulk for professional", async () => {
+    vi.mocked(userRepository.findUserById).mockResolvedValue({
+      id: "p-1",
+      role: "PROFESSIONAL",
+    } as never);
+    vi.mocked(
+      availabilityRepository.findAvailabilitiesByProfessional,
+    ).mockResolvedValue([] as never);
+    vi.mocked(availabilityRepository.createAvailabilitiesBulk).mockResolvedValue([
+      { id: "a-1" },
+      { id: "a-2" },
+    ] as never);
+
+    const result = await createProfessionalAvailabilitiesBulk({
+      professionalId: "p-1",
+      slots: [
+        { weekday: 1, startTime: "08:00", endTime: "12:00" },
+        { weekday: 2, startTime: "13:00", endTime: "18:00" },
+      ],
+    });
+
+    expect(result).toHaveLength(2);
+  });
+
+  it("rejects overlapping slots within the same bulk payload", async () => {
+    vi.mocked(userRepository.findUserById).mockResolvedValue({
+      id: "p-1",
+      role: "PROFESSIONAL",
+    } as never);
+
+    await expect(
+      createProfessionalAvailabilitiesBulk({
+        professionalId: "p-1",
+        slots: [
+          { weekday: 1, startTime: "08:00", endTime: "12:00" },
+          { weekday: 1, startTime: "11:00", endTime: "13:00" },
+        ],
+      }),
+    ).rejects.toBeInstanceOf(AppError);
   });
 
   it("rejects invalid weekday", async () => {
