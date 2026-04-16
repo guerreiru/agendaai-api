@@ -1,19 +1,14 @@
 import type { NextFunction, Request, Response } from "express";
-import { findUserById } from "../repositories/user.repository.js";
+import { findUserById } from '../repositories/user.repository.js';
 import {
-	getRefreshTokenFromLegacyBody,
-	isLegacyRefreshBodyEnabled,
-	login,
-	refreshAccessToken,
-	revokeRefreshToken,
-} from "../services/auth.service.js";
-import { AppError } from "../utils/app-error.js";
+    getRefreshTokenFromLegacyBody, isLegacyRefreshBodyEnabled, login, refreshAccessToken,
+    revokeAllRefreshSessionsByUserId, revokeRefreshToken
+} from '../services/auth.service.js';
+import { AppError } from '../utils/app-error.js';
 import {
-	getRefreshClearCookieOptions,
-	getRefreshCookieOptions,
-	REFRESH_COOKIE_NAME,
-} from "../utils/auth-cookie.js";
-import { validateLoginBody } from "../validators/auth.validator.js";
+    getRefreshClearCookieOptions, getRefreshCookieOptions, REFRESH_COOKIE_NAME
+} from '../utils/auth-cookie.js';
+import { validateLoginBody } from '../validators/auth.validator.js';
 
 export async function loginController(
 	request: Request,
@@ -84,6 +79,10 @@ export async function logoutController(
 	next: NextFunction,
 ) {
 	try {
+		if (request.userId) {
+			await revokeAllRefreshSessionsByUserId(request.userId);
+		}
+
 		const refreshToken = request.cookies?.[REFRESH_COOKIE_NAME] as
 			| string
 			| undefined;
