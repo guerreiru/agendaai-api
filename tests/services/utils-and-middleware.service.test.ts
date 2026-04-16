@@ -1,11 +1,9 @@
-import { describe, expect, it, vi } from "vitest";
-import { errorHandler } from "../../src/middlewares/errorHandler";
-import { AppError } from "../../src/utils/app-error";
-import { hashPassword, verifyPassword } from "../../src/utils/password";
-import {
-  getRefreshTokenExpiryDate,
-  hashRefreshToken,
-} from "../../src/utils/refresh-token";
+import { describe, expect, it, vi } from 'vitest';
+
+import { errorHandler } from '../../src/middlewares/errorHandler';
+import { AppError } from '../../src/utils/app-error';
+import { hashPassword, verifyPassword } from '../../src/utils/password';
+import { getRefreshTokenExpiryDate, hashRefreshToken } from '../../src/utils/refresh-token';
 
 describe("utils and middleware", () => {
   describe("password", () => {

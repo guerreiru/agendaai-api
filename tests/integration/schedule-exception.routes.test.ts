@@ -1,9 +1,10 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import request from "supertest";
-import { app } from "../../src/app";
-import { prisma } from "../../src/lib/prisma";
-import jwt from "jsonwebtoken";
-import { randomUUID } from "node:crypto";
+import jwt from 'jsonwebtoken';
+import { randomUUID } from 'node:crypto';
+import request from 'supertest';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
+import { app } from '../../src/app';
+import { prisma } from '../../src/lib/prisma';
 
 describe("Schedule Exception Routes", () => {
   let accessToken: string;

@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { slotService } from "../../src/services/slot.service";
-import { prisma } from "../../src/lib/prisma";
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
+import { prisma } from '../../src/lib/prisma';
+import { slotService } from '../../src/services/slot.service';
 
 describe("SlotService", () => {
   let ownerId: string;

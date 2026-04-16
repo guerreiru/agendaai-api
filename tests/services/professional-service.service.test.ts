@@ -1,17 +1,15 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as companyRepository from '../../src/repositories/company.repository';
+import * as professionalServiceRepository from '../../src/repositories/professional-service.repository';
+import * as serviceRepository from '../../src/repositories/service.repository';
+import * as userRepository from '../../src/repositories/user.repository';
 import {
-  createProfessionalServiceOffer,
-  deleteProfessionalServiceOffer,
-  getProfessionalServiceOffer,
-  listProfessionalServiceOffers,
-  listProfessionalServiceOffersByCompany,
-  updateProfessionalServiceOffer,
-} from "../../src/services/professional-service.service";
-import * as companyRepository from "../../src/repositories/company.repository";
-import * as professionalServiceRepository from "../../src/repositories/professional-service.repository";
-import * as serviceRepository from "../../src/repositories/service.repository";
-import * as userRepository from "../../src/repositories/user.repository";
+    createProfessionalServiceOffer, deleteProfessionalServiceOffer, getProfessionalServiceOffer,
+    listProfessionalServiceOffers, listProfessionalServiceOffersByCompany,
+    updateProfessionalServiceOffer
+} from '../../src/services/professional-service.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/repositories/professional-service.repository");
 vi.mock("../../src/repositories/service.repository");

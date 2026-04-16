@@ -1,6 +1,7 @@
-import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { scheduleExceptionService } from "../../src/services/schedule-exception.service";
-import { prisma } from "../../src/lib/prisma";
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+
+import { prisma } from '../../src/lib/prisma';
+import { scheduleExceptionService } from '../../src/services/schedule-exception.service';
 
 describe("ScheduleExceptionService", () => {
   let professionalId: string;

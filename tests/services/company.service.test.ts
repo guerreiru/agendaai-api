@@ -1,14 +1,11 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as companyRepository from '../../src/repositories/company.repository';
+import * as userRepository from '../../src/repositories/user.repository';
 import {
-  createCompanyAccount,
-  deleteCompanyAccount,
-  getCompany,
-  listCompanies,
-  updateCompanyAccount,
-} from "../../src/services/company.service";
-import * as companyRepository from "../../src/repositories/company.repository";
-import * as userRepository from "../../src/repositories/user.repository";
+    createCompanyAccount, deleteCompanyAccount, getCompany, listCompanies, updateCompanyAccount
+} from '../../src/services/company.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/repositories/company.repository");
 vi.mock("../../src/repositories/user.repository");

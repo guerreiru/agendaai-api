@@ -1,12 +1,12 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as companyRepository from '../../src/repositories/company.repository';
+import * as dashboardRepository from '../../src/repositories/dashboard.repository';
+import * as userRepository from '../../src/repositories/user.repository';
 import {
-	getCompanyDashboard,
-	getProfessionalMeDashboard,
-} from "../../src/services/dashboard.service";
-import * as companyRepository from "../../src/repositories/company.repository";
-import * as dashboardRepository from "../../src/repositories/dashboard.repository";
-import * as userRepository from "../../src/repositories/user.repository";
+    getCompanyDashboard, getProfessionalMeDashboard
+} from '../../src/services/dashboard.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/repositories/company.repository");
 vi.mock("../../src/repositories/dashboard.repository");

@@ -1,18 +1,15 @@
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import jwt from "jsonwebtoken";
-import { AppError } from "../../src/utils/app-error";
+import jwt from 'jsonwebtoken';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import * as refreshSessionRepository from '../../src/repositories/refresh-session.repository';
+import * as userRepository from '../../src/repositories/user.repository';
 import {
-  getRefreshTokenFromLegacyBody,
-  isLegacyRefreshBodyEnabled,
-  login,
-  refreshAccessToken,
-  revokeRefreshToken,
-  verifyAccessToken,
-} from "../../src/services/auth.service";
-import * as refreshSessionRepository from "../../src/repositories/refresh-session.repository";
-import * as userRepository from "../../src/repositories/user.repository";
-import * as passwordUtils from "../../src/utils/password";
-import * as refreshTokenUtils from "../../src/utils/refresh-token";
+    getRefreshTokenFromLegacyBody, isLegacyRefreshBodyEnabled, login, refreshAccessToken,
+    revokeRefreshToken, verifyAccessToken
+} from '../../src/services/auth.service';
+import { AppError } from '../../src/utils/app-error';
+import * as passwordUtils from '../../src/utils/password';
+import * as refreshTokenUtils from '../../src/utils/refresh-token';
 
 vi.mock("../../src/repositories/user.repository");
 vi.mock("../../src/repositories/refresh-session.repository");

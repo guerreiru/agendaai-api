@@ -1,19 +1,17 @@
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { prisma } from '../../src/lib/prisma';
+import * as appointmentRepository from '../../src/repositories/appointment.repository';
+import * as availabilityRepository from '../../src/repositories/availability.repository';
+import * as companyRepository from '../../src/repositories/company.repository';
+import * as professionalServiceRepository from '../../src/repositories/professional-service.repository';
+import * as serviceRepository from '../../src/repositories/service.repository';
+import * as userRepository from '../../src/repositories/user.repository';
 import {
-  createClientAppointment,
-  deleteClientAppointment,
-  getAppointment,
-  listAppointments,
-  updateAppointmentStatus,
-} from "../../src/services/appointment.service";
-import * as appointmentRepository from "../../src/repositories/appointment.repository";
-import * as userRepository from "../../src/repositories/user.repository";
-import * as serviceRepository from "../../src/repositories/service.repository";
-import * as companyRepository from "../../src/repositories/company.repository";
-import * as professionalServiceRepository from "../../src/repositories/professional-service.repository";
-import * as availabilityRepository from "../../src/repositories/availability.repository";
-import { prisma } from "../../src/lib/prisma";
+    createClientAppointment, deleteClientAppointment, getAppointment, listAppointments,
+    updateAppointmentStatus
+} from '../../src/services/appointment.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/repositories/appointment.repository");
 vi.mock("../../src/repositories/user.repository");
