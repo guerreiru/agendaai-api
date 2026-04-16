@@ -11,7 +11,6 @@ const APPOINTMENT_STATUSES_FOR_TODAY: AppointmentStatus[] = [
 ];
 
 const APPOINTMENT_STATUSES_FOR_REVENUE: AppointmentStatus[] = [
-  "CONFIRMED",
   "COMPLETED",
 ];
 
