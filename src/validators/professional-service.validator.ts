@@ -2,8 +2,8 @@ import type {
 	CreateProfessionalServiceBody,
 	UpdateProfessionalServiceBody,
 } from "../types/professional-service.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 
 export function validateCreateProfessionalServiceBody(
 	body: unknown,

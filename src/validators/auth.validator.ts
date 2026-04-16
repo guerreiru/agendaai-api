@@ -1,6 +1,6 @@
 import type { LoginBody, RefreshTokenBody } from "../types/auth.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 
 export function validateLoginBody(body: unknown): LoginBody {
 	if (typeof body !== "object" || body === null) {

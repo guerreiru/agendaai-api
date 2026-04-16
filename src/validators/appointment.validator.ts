@@ -3,8 +3,8 @@ import type {
 	CreateAppointmentBody,
 	UpdateAppointmentBody,
 } from "../types/appointment.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 
 export function validateCreateAppointmentBody(
 	body: unknown,

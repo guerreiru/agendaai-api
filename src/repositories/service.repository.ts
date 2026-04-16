@@ -1,4 +1,5 @@
-import { prisma } from "../lib/prisma.js";
+import { prisma } from '../lib/prisma.js';
+
 import type { CreateServiceInput, UpdateServiceInput } from "../types/service.js";
 
 export async function findServiceById(id: string) {

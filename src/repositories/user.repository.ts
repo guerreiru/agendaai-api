@@ -1,4 +1,5 @@
-import { prisma } from "../lib/prisma.js";
+import { prisma } from '../lib/prisma.js';
+
 import type { UserRole } from "../types/user.js";
 
 export type CreateUserData = {

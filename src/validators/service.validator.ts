@@ -1,6 +1,6 @@
 import type { CreateServiceBody, UpdateServiceBody } from "../types/service.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 
 export function validateCreateServiceBody(body: unknown): CreateServiceBody {
 	if (typeof body !== "object" || body === null) {

@@ -3,7 +3,7 @@ import type {
   ScheduleExceptionBody,
   UpdateScheduleExceptionBody,
 } from "../types/schedule-exception.js";
-import { AppError } from "../utils/app-error.js";
+import { AppError } from '../utils/app-error.js';
 
 export function validateCreateScheduleExceptionBody(
   body: Record<string, unknown>,

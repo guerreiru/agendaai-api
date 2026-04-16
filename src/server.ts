@@ -1,5 +1,5 @@
-import { app } from "./app.js";
-import { startAppointmentExpirationJob } from "./jobs/appointment-expiration.job.js";
+import { app } from './app.js';
+import { startAppointmentExpirationJob } from './jobs/appointment-expiration.job.js';
 
 const PORT = Number(process.env.PORT ?? 3001);
 

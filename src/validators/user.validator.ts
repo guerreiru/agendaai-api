@@ -1,7 +1,7 @@
 import type { CreateUserBody, UpdateUserBody } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
-import { normalizePhoneToE164 } from "../utils/phone.js";
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
+import { normalizePhoneToE164 } from '../utils/phone.js';
 
 const userRoles = [
   "CLIENT",

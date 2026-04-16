@@ -1,21 +1,15 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-	createCompanyAccount,
-	deleteCompanyAccount,
-	getCompany,
-	getPublicCompanyBySlug,
-	listCompanies,
-	searchPublicCompanies,
-	updateCompanyAccount,
-} from "../services/company.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+    createCompanyAccount, deleteCompanyAccount, getCompany, getPublicCompanyBySlug, listCompanies,
+    searchPublicCompanies, updateCompanyAccount
+} from '../services/company.service.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 import {
-	validateCreateCompanyBody,
-	validateUpdateCompanyBody,
-} from "../validators/company.validator.js";
+    validateCreateCompanyBody, validateUpdateCompanyBody
+} from '../validators/company.validator.js';
 
+import type { UserRole } from "../types/user.js";
 export async function createCompanyController(
 	request: Request,
 	response: Response,

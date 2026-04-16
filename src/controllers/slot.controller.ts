@@ -1,6 +1,6 @@
 import type { NextFunction, Request, Response } from "express";
-import { slotService } from "../services/slot.service.js";
-import { validateGetSlotsParams } from "../validators/schedule-exception.js";
+import { slotService } from '../services/slot.service.js';
+import { validateGetSlotsParams } from '../validators/schedule-exception.js';
 
 export class SlotController {
 	async getAvailableSlots(

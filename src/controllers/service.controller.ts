@@ -1,20 +1,15 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-	createCatalogService,
-	deleteCatalogService,
-	getCatalogService,
-	listCatalogServices,
-	listCatalogServicesByCompany,
-	updateCatalogService,
-} from "../services/service.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+    createCatalogService, deleteCatalogService, getCatalogService, listCatalogServices,
+    listCatalogServicesByCompany, updateCatalogService
+} from '../services/service.service.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 import {
-	validateCreateServiceBody,
-	validateUpdateServiceBody,
-} from "../validators/service.validator.js";
+    validateCreateServiceBody, validateUpdateServiceBody
+} from '../validators/service.validator.js';
 
+import type { UserRole } from "../types/user.js";
 export async function createServiceController(
 	request: Request,
 	response: Response,

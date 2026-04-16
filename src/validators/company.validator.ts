@@ -1,6 +1,6 @@
 import type { CreateCompanyBody, UpdateCompanyBody } from "../types/company.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 
 export function validateCreateCompanyBody(body: unknown): CreateCompanyBody {
 	if (typeof body !== "object" || body === null) {

@@ -1,22 +1,15 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-  deleteUserAccount,
-  getUser,
-  getUsersByCompanyId,
-  listUsers,
-  searchClientUsersByEmailOrPhone,
-  signUpUser,
-  updateUserAccount,
-} from "../services/user.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+    deleteUserAccount, getUser, getUsersByCompanyId, listUsers, searchClientUsersByEmailOrPhone,
+    signUpUser, updateUserAccount
+} from '../services/user.service.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 import {
-  validateCreateUserBody,
-  validateSearchUsersQuery,
-  validateUpdateUserBody,
-} from "../validators/user.validator.js";
+    validateCreateUserBody, validateSearchUsersQuery, validateUpdateUserBody
+} from '../validators/user.validator.js';
 
+import type { UserRole } from "../types/user.js";
 export async function createUser(
   request: Request,
   response: Response,
