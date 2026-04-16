@@ -25,7 +25,10 @@ function parseCookieHeader(
 		}
 
 		const rawValue = rawValueParts.join("=");
-		result[decodeURIComponent(rawName)] = decodeURIComponent(rawValue ?? "");
+		try {
+			result[decodeURIComponent(rawName)] = decodeURIComponent(rawValue ?? "");
+		} catch {
+		}
 	}
 
 	return result;
