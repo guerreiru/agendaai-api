@@ -1,90 +1,106 @@
-import { prisma } from '../lib/prisma.js';
+import { prisma } from "../lib/prisma.js";
 
-import type { CreateCompanyInput, UpdateCompanyInput } from "../types/company.js";
+import type {
+  CreateCompanyInput,
+  UpdateCompanyInput,
+} from "../types/company.js";
 
 export async function findCompanyById(id: string) {
-	return prisma.company.findUnique({
-		where: { id },
-	});
+  return prisma.company.findUnique({
+    where: { id },
+  });
 }
 
 export async function findCompanyBySlug(slug: string) {
-	return prisma.company.findUnique({
-		where: { slug },
-	});
+  return prisma.company.findUnique({
+    where: { slug },
+  });
 }
 
 export async function findCompanyPublicProfileBySlug(slug: string) {
-	return prisma.company.findUnique({
-		where: { slug },
-		select: {
-			id: true,
-			name: true,
-			slug: true,
-			timezone: true,
-			services: {
-				orderBy: { createdAt: "desc" },
-				select: {
-					id: true,
-					name: true,
-					description: true,
-					duration: true,
-				},
-			},
-			professionals: {
-				where: {
-					role: "PROFESSIONAL",
-				},
-				orderBy: { createdAt: "desc" },
-				select: {
-					id: true,
-					name: true,
-					displayName: true,
-				},
-			},
-		},
-	});
+  return prisma.company.findUnique({
+    where: { slug },
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      timezone: true,
+      services: {
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          description: true,
+          duration: true,
+        },
+      },
+      professionals: {
+        where: {
+          role: "PROFESSIONAL",
+        },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          displayName: true,
+        },
+      },
+    },
+  });
 }
 
 export async function findPublicCompaniesBySearch(searchTerm?: string) {
-	const where = searchTerm?.trim()
-		? { name: { contains: searchTerm.trim(), mode: "insensitive" as const } }
-		: {};
+  const where = searchTerm?.trim()
+    ? { name: { contains: searchTerm.trim(), mode: "insensitive" as const } }
+    : {};
 
-	return prisma.company.findMany({
-		where,
-		select: {
-			id: true,
-			name: true,
-			slug: true,
-			phone: true,
-		},
-		orderBy: { name: "asc" },
-		take: 20,
-	});
+  return prisma.company.findMany({
+    where,
+    select: {
+      id: true,
+      name: true,
+      slug: true,
+      phone: true,
+      professionals: {
+        where: {
+          role: "PROFESSIONAL",
+        },
+        orderBy: { createdAt: "desc" },
+        select: {
+          id: true,
+          name: true,
+          displayName: true,
+          professionalServices: true,
+        },
+      },
+      services: true,
+    },
+    orderBy: { name: "asc" },
+    take: 20,
+  });
 }
 
 export async function findCompanies() {
-	return prisma.company.findMany({
-		orderBy: { createdAt: "desc" },
-	});
+  return prisma.company.findMany({
+    orderBy: { createdAt: "desc" },
+  });
 }
 
 export async function createCompany(data: CreateCompanyInput) {
-	return prisma.company.create({
-		data,
-	});
+  return prisma.company.create({
+    data,
+  });
 }
 
 export async function updateCompany(id: string, data: UpdateCompanyInput) {
-	return prisma.company.update({
-		where: { id },
-		data,
-	});
+  return prisma.company.update({
+    where: { id },
+    data,
+  });
 }
 
 export async function deleteCompany(id: string) {
-	return prisma.company.delete({
-		where: { id },
-	});
+  return prisma.company.delete({
+    where: { id },
+  });
 }
