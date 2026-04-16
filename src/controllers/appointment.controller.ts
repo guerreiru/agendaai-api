@@ -1,22 +1,16 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-	cancelAppointment,
-	confirmAppointment,
-	createClientAppointment,
-	deleteClientAppointmentWithContext,
-	getAppointment,
-	listAppointments,
-	rejectAppointment,
-	updateAppointmentStatus,
-} from "../services/appointment.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+    cancelAppointment, confirmAppointment, createClientAppointment,
+    deleteClientAppointmentWithContext, getAppointment, listAppointments, rejectAppointment,
+    updateAppointmentStatus
+} from '../services/appointment.service.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 import {
-	validateCreateAppointmentBody,
-	validateUpdateAppointmentBody,
-} from "../validators/appointment.validator.js";
+    validateCreateAppointmentBody, validateUpdateAppointmentBody
+} from '../validators/appointment.validator.js';
 
+import type { UserRole } from "../types/user.js";
 export async function createAppointmentController(
 	request: Request,
 	response: Response,
@@ -61,10 +55,23 @@ export async function listAppointmentsController(
 			throw new AppError("Authentication required.", 401);
 		}
 
-		const appointments = await listAppointments({
-			actorId: request.userId,
-			actorRole: request.userRole as UserRole,
-		});
+		const { startDate, endDate } = request.query;
+
+		const filters: { startDate?: Date; endDate?: Date } = {};
+		if (isString(startDate)) {
+			filters.startDate = new Date(startDate);
+		}
+		if (isString(endDate)) {
+			filters.endDate = new Date(endDate);
+		}
+
+		const appointments = await listAppointments(
+			{
+				actorId: request.userId,
+				actorRole: request.userRole as UserRole,
+			},
+			filters,
+		);
 		return response.status(200).json(appointments);
 	} catch (error) {
 		next(error);
