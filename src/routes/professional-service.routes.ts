@@ -1,13 +1,11 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	createProfessionalServiceController,
-	deleteProfessionalServiceController,
-	getProfessionalServiceController,
-	listCompanyProfessionalServicesController,
-	listProfessionalServicesController,
-	updateProfessionalServiceController,
-} from "../controllers/professional-service.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+    createProfessionalServiceController, deleteProfessionalServiceController,
+    getProfessionalServiceController, listCompanyProfessionalServicesController,
+    listProfessionalServicesController, updateProfessionalServiceController
+} from '../controllers/professional-service.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 

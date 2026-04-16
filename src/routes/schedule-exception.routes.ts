@@ -1,7 +1,8 @@
 import type { Router as ExpressRouter } from "express";
-import { Router } from "express";
-import { scheduleExceptionController } from "../controllers/schedule-exception.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+import { Router } from 'express';
+
+import { scheduleExceptionController } from '../controllers/schedule-exception.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 export const scheduleExceptionRouter: ExpressRouter = Router();
 

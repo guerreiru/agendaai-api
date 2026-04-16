@@ -1,15 +1,11 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	cancelAppointmentController,
-	confirmAppointmentController,
-	createAppointmentController,
-	deleteAppointmentController,
-	getAppointmentController,
-	listAppointmentsController,
-	rejectAppointmentController,
-	updateAppointmentController,
-} from "../controllers/appointment.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+    cancelAppointmentController, confirmAppointmentController, createAppointmentController,
+    deleteAppointmentController, getAppointmentController, listAppointmentsController,
+    rejectAppointmentController, updateAppointmentController
+} from '../controllers/appointment.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 

@@ -1,7 +1,8 @@
 import type { Router as ExpressRouter } from "express";
-import { Router } from "express";
-import { slotController } from "../controllers/slot.controller.js";
-import { optionalAuthMiddleware } from "../middlewares/auth.middleware.js";
+import { Router } from 'express';
+
+import { slotController } from '../controllers/slot.controller.js';
+import { optionalAuthMiddleware } from '../middlewares/auth.middleware.js';
 
 export const slotRouter: ExpressRouter = Router();
 

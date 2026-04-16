@@ -1,4 +1,4 @@
-import { expirePastAppointments } from "../repositories/appointment.repository.js";
+import { expirePastAppointments } from '../repositories/appointment.repository.js';
 
 const DEFAULT_INTERVAL_MS = 5 * 60 * 1000;
 const MIN_INTERVAL_MS = 60 * 1000;

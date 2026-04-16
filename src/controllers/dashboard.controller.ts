@@ -1,12 +1,9 @@
 import type { NextFunction, Request, Response } from "express";
-import {
-	getCompanyDashboard,
-	getProfessionalMeDashboard,
-} from "../services/dashboard.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+import { getCompanyDashboard, getProfessionalMeDashboard } from '../services/dashboard.service.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 
+import type { UserRole } from "../types/user.js";
 export async function getCompanyDashboardController(
 	request: Request,
 	response: Response,

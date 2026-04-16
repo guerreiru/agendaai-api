@@ -1,12 +1,11 @@
-import { findCompanyById } from "../repositories/company.repository.js";
+import { findCompanyById } from '../repositories/company.repository.js';
 import {
-	getCompanyDashboardSummary,
-	getProfessionalDashboardSummary,
-} from "../repositories/dashboard.repository.js";
-import { findUserById } from "../repositories/user.repository.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
+    getCompanyDashboardSummary, getProfessionalDashboardSummary
+} from '../repositories/dashboard.repository.js';
+import { findUserById } from '../repositories/user.repository.js';
+import { AppError } from '../utils/app-error.js';
 
+import type { UserRole } from "../types/user.js";
 export type DashboardActorContext = {
 	actorId: string;
 	actorRole: UserRole;

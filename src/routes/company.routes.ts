@@ -1,14 +1,11 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	createCompanyController,
-	deleteCompanyController,
-	getCompanyController,
-	getPublicCompanyBySlugController,
-	listCompaniesController,
-	searchPublicCompaniesController,
-	updateCompanyController,
-} from "../controllers/company.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+    createCompanyController, deleteCompanyController, getCompanyController,
+    getPublicCompanyBySlugController, listCompaniesController, searchPublicCompaniesController,
+    updateCompanyController
+} from '../controllers/company.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 

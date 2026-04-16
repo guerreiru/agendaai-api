@@ -1,4 +1,5 @@
-import { prisma } from "../lib/prisma.js";
+import { prisma } from '../lib/prisma.js';
+
 import type { CreateCompanyInput, UpdateCompanyInput } from "../types/company.js";
 
 export async function findCompanyById(id: string) {

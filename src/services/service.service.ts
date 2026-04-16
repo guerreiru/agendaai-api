@@ -1,16 +1,12 @@
-import { findCompanyById } from "../repositories/company.repository.js";
+import { findCompanyById } from '../repositories/company.repository.js';
 import {
-	createService,
-	deleteService,
-	findServiceById,
-	findServices,
-	findServicesByCompany,
-	updateService,
-} from "../repositories/service.repository.js";
+    createService, deleteService, findServiceById, findServices, findServicesByCompany,
+    updateService
+} from '../repositories/service.repository.js';
+import { AppError } from '../utils/app-error.js';
+
 import type { CreateServiceInput, UpdateServiceInput } from "../types/service.js";
 import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-
 export type ServiceActorContext = {
 	actorId: string;
 	actorRole: UserRole;

@@ -1,22 +1,18 @@
-import { findCompanyById } from "../repositories/company.repository.js";
+import { findCompanyById } from '../repositories/company.repository.js';
 import {
-	createProfessionalService,
-	deleteProfessionalService,
-	findProfessionalServiceById,
-	findProfessionalServiceByProfessionalAndService,
-	findProfessionalServices,
-	findProfessionalServicesByCompany,
-	updateProfessionalService,
-} from "../repositories/professional-service.repository.js";
-import { findServiceById } from "../repositories/service.repository.js";
-import { findUserById } from "../repositories/user.repository.js";
+    createProfessionalService, deleteProfessionalService, findProfessionalServiceById,
+    findProfessionalServiceByProfessionalAndService, findProfessionalServices,
+    findProfessionalServicesByCompany, updateProfessionalService
+} from '../repositories/professional-service.repository.js';
+import { findServiceById } from '../repositories/service.repository.js';
+import { findUserById } from '../repositories/user.repository.js';
+import { AppError } from '../utils/app-error.js';
+
 import type {
 	CreateProfessionalServiceInput,
 	UpdateProfessionalServiceInput,
 } from "../types/professional-service.js";
 import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-
 export type ProfessionalServiceActorContext = {
 	actorId: string;
 	actorRole: UserRole;

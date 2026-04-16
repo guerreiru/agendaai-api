@@ -1,13 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	createServiceController,
-	deleteServiceController,
-	getServiceController,
-	listCompanyServicesController,
-	listServicesController,
-	updateServiceController,
-} from "../controllers/service.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+    createServiceController, deleteServiceController, getServiceController,
+    listCompanyServicesController, listServicesController, updateServiceController
+} from '../controllers/service.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 

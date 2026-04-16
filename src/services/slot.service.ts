@@ -1,9 +1,9 @@
 import type { AppointmentModel } from "../../generated/prisma/models/Appointment.js";
 import type { ScheduleExceptionModel } from "../../generated/prisma/models/ScheduleException.js";
-import { prisma } from "../lib/prisma.js";
-import type { GetAvailableSlotsResponse, TimeSlot } from "../types/slot.js";
-import { AppError } from "../utils/app-error.js";
+import { prisma } from '../lib/prisma.js';
+import { AppError } from '../utils/app-error.js';
 
+import type { GetAvailableSlotsResponse, TimeSlot } from "../types/slot.js";
 export class SlotService {
 	/**
 	 * Get available time slots for a professional to offer a specific service on a given date
