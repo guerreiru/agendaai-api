@@ -1,17 +1,10 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	createUser,
-	deleteUserController,
-	getUserController,
-	getUsersByCompanyController,
-	listUsersController,
-	searchUsersController,
-	updateUserController,
-} from "../controllers/user.controller.js";
-import {
-	authMiddleware,
-	optionalAuthMiddleware,
-} from "../middlewares/auth.middleware.js";
+    createUser, deleteUserController, getUserController, getUsersByCompanyController,
+    listUsersController, searchUsersController, updateUserController
+} from '../controllers/user.controller.js';
+import { authMiddleware, optionalAuthMiddleware } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 
