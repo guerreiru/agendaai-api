@@ -1,5 +1,7 @@
+import type { Prisma } from "../../generated/prisma/browser.js";
 import type { AppointmentStatus } from "../../generated/prisma/enums.js";
 import { prisma } from "../lib/prisma.js";
+
 import type {
   CreateAppointmentInput,
   UpdateAppointmentInput,
@@ -22,8 +24,20 @@ export async function findAppointmentById(id: string) {
   });
 }
 
-export async function findAppointments() {
+export async function findAppointments(filters?: {
+  startDate?: Date;
+  endDate?: Date;
+}) {
+  const where: Prisma.AppointmentWhereInput = {};
+
+  if (filters?.startDate || filters?.endDate) {
+    where.date = {};
+    if (filters.startDate) where.date.gte = filters.startDate;
+    if (filters.endDate) where.date.lte = filters.endDate;
+  }
+
   return prisma.appointment.findMany({
+    where,
     orderBy: { createdAt: "desc" },
     include: {
       client: {
