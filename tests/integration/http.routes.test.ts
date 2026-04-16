@@ -1,6 +1,15 @@
-import request from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import request from 'supertest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { app } from '../../src/app';
+import * as appointmentService from '../../src/services/appointment.service';
+import * as authService from '../../src/services/auth.service';
+import * as availabilityService from '../../src/services/availability.service';
+import * as companyService from '../../src/services/company.service';
+import * as professionalServiceService from '../../src/services/professional-service.service';
+import * as serviceService from '../../src/services/service.service';
+import * as userService from '../../src/services/user.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/services/auth.service");
 vi.mock("../../src/services/user.service");
@@ -9,15 +18,6 @@ vi.mock("../../src/services/service.service");
 vi.mock("../../src/services/professional-service.service");
 vi.mock("../../src/services/availability.service");
 vi.mock("../../src/services/appointment.service");
-
-import { app } from "../../src/app";
-import * as authService from "../../src/services/auth.service";
-import * as appointmentService from "../../src/services/appointment.service";
-import * as availabilityService from "../../src/services/availability.service";
-import * as companyService from "../../src/services/company.service";
-import * as professionalServiceService from "../../src/services/professional-service.service";
-import * as serviceService from "../../src/services/service.service";
-import * as userService from "../../src/services/user.service";
 
 describe("HTTP integration - routes/controllers", () => {
   const adminToken = "test-admin-token";
@@ -335,6 +335,29 @@ describe("HTTP integration - routes/controllers", () => {
   });
 
   describe("availabilities", () => {
+    it("POST /availabilities/batch returns 201", async () => {
+      vi.mocked(
+        availabilityService.createProfessionalAvailabilitiesBulk,
+      ).mockResolvedValue([
+        { id: "a-1" },
+        { id: "a-2" },
+      ] as never);
+
+      const response = await request(app)
+        .post("/availabilities/batch")
+        .set("Authorization", `Bearer ${adminToken}`)
+        .send({
+          professionalId: "p-1",
+          slots: [
+            { weekday: 1, startTime: "08:00", endTime: "12:00" },
+            { weekday: 2, startTime: "13:00", endTime: "18:00" },
+          ],
+        });
+
+      expect(response.status).toBe(201);
+      expect(response.body).toHaveLength(2);
+    });
+
     it("POST /availabilities returns 201", async () => {
       vi.mocked(
         availabilityService.createProfessionalAvailability,
