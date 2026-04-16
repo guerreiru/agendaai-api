@@ -1,11 +1,9 @@
-import { describe, it, expect, beforeAll, afterAll } from "vitest";
-import { prisma } from "../../src/lib/prisma";
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { prisma } from '../../src/lib/prisma';
 import {
-  createClientAppointment,
-  confirmAppointment,
-  rejectAppointment,
-  cancelAppointment,
-} from "../../src/services/appointment.service";
+    cancelAppointment, confirmAppointment, createClientAppointment, rejectAppointment
+} from '../../src/services/appointment.service';
 
 describe("Appointment Confirmation Flow", () => {
   let companyWithAutoConfirm: { id: string };
