@@ -1,20 +1,16 @@
 import {
-	createCompany,
-	deleteCompany,
-	findCompanies,
-	findCompanyById,
-	findCompanyBySlug,
-	findCompanyPublicProfileBySlug,
-	findPublicCompaniesBySearch,
-	updateCompany,
-} from "../repositories/company.repository.js";
-import { findProfessionalServicesByCompany } from "../repositories/professional-service.repository.js";
-import { findUserById } from "../repositories/user.repository.js";
+    createCompany, deleteCompany, findCompanies, findCompanyById, findCompanyBySlug,
+    findCompanyPublicProfileBySlug, findPublicCompaniesBySearch, updateCompany
+} from '../repositories/company.repository.js';
+import {
+    findProfessionalServicesByCompany
+} from '../repositories/professional-service.repository.js';
+import { findUserById } from '../repositories/user.repository.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
+
 import type { CreateCompanyInput, UpdateCompanyInput } from "../types/company.js";
 import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
-
 export type CompanyActorContext = {
 	actorId: string;
 	actorRole: UserRole;
