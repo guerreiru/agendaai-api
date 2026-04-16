@@ -1,16 +1,20 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	createAvailabilityController,
-	deleteAvailabilityController,
-	getAvailabilityController,
-	listAvailabilitiesController,
-	listProfessionalAvailabilitiesController,
-	updateAvailabilityController,
-} from "../controllers/availability.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+    createAvailabilityController, createBulkAvailabilityController, deleteAvailabilityController,
+    getAvailabilityController, listAvailabilitiesController,
+    listProfessionalAvailabilitiesController, updateAvailabilityController
+} from '../controllers/availability.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 
+router.post(
+	"/availabilities/batch",
+	authMiddleware,
+	requireRoles("PROFESSIONAL", "COMPANY_OWNER", "ADMIN", "SUPER_ADMIN"),
+	createBulkAvailabilityController,
+);
 router.post(
 	"/availabilities",
 	authMiddleware,

@@ -1,27 +1,43 @@
 import {
-	createAvailability,
-	deleteAvailability,
-	findAvailabilities,
-	findAvailabilitiesByProfessional,
-	findAvailabilityById,
-	findOverlappingAvailability,
-	updateAvailability,
-} from "../repositories/availability.repository.js";
-import { findCompanyById } from "../repositories/company.repository.js";
-import { findUserById } from "../repositories/user.repository.js";
+    createAvailabilitiesBulk, createAvailability, deleteAvailability, findAvailabilities,
+    findAvailabilitiesByProfessional, findAvailabilityById, findOverlappingAvailability,
+    updateAvailability
+} from '../repositories/availability.repository.js';
+import { findCompanyById } from '../repositories/company.repository.js';
+import { findUserById } from '../repositories/user.repository.js';
+import { AppError } from '../utils/app-error.js';
+
 import type {
+	CreateBulkAvailabilityInput,
 	CreateAvailabilityInput,
 	UpdateAvailabilityInput,
 } from "../types/availability.js";
 import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-
 function validateTimeFormat(time: string): boolean {
 	return /^\d{2}:\d{2}$/.test(time);
 }
 
 function validateWeekday(weekday: number): boolean {
 	return Number.isInteger(weekday) && weekday >= 0 && weekday <= 6;
+}
+
+function toMinutes(time: string): number {
+	const [hours, minutes] = time.split(":").map(Number);
+	return hours * 60 + minutes;
+}
+
+function hasTimeOverlap(
+	startA: string,
+	endA: string,
+	startB: string,
+	endB: string,
+) {
+	const startAMinutes = toMinutes(startA);
+	const endAMinutes = toMinutes(endA);
+	const startBMinutes = toMinutes(startB);
+	const endBMinutes = toMinutes(endB);
+
+	return startAMinutes < endBMinutes && startBMinutes < endAMinutes;
 }
 
 export type AvailabilityActorContext = {
@@ -125,6 +141,111 @@ export async function createProfessionalAvailability(
 		endTime: input.endTime,
 		isActive: input.isActive ?? true,
 	});
+}
+
+export async function createProfessionalAvailabilitiesBulk(
+	input: CreateBulkAvailabilityInput,
+	context?: AvailabilityActorContext,
+) {
+	if (input.slots.length === 0) {
+		throw new AppError("At least one slot must be provided.", 400);
+	}
+
+	if (context) {
+		await assertAvailabilityWriteAccess(input.professionalId, context);
+	}
+
+	const professional = await findUserById(input.professionalId);
+	if (!professional) {
+		throw new AppError("Professional not found.", 404);
+	}
+
+	if (professional.role !== "PROFESSIONAL") {
+		throw new AppError("User must have role PROFESSIONAL.", 400);
+	}
+
+	for (let i = 0; i < input.slots.length; i++) {
+		const slot = input.slots[i];
+
+		if (!validateWeekday(slot.weekday)) {
+			throw new AppError(`Slot at index ${i}: weekday must be between 0 and 6.`, 400);
+		}
+
+		if (!validateTimeFormat(slot.startTime)) {
+			throw new AppError(
+				`Slot at index ${i}: start time must be in HH:mm format.`,
+				400,
+			);
+		}
+
+		if (!validateTimeFormat(slot.endTime)) {
+			throw new AppError(
+				`Slot at index ${i}: end time must be in HH:mm format.`,
+				400,
+			);
+		}
+
+		if (slot.startTime >= slot.endTime) {
+			throw new AppError(
+				`Slot at index ${i}: start time must be before end time.`,
+				400,
+			);
+		}
+	}
+
+	for (let i = 0; i < input.slots.length; i++) {
+		const current = input.slots[i];
+		for (let j = i + 1; j < input.slots.length; j++) {
+			const next = input.slots[j];
+
+			if (current.weekday !== next.weekday) {
+				continue;
+			}
+
+			if (
+				hasTimeOverlap(
+					current.startTime,
+					current.endTime,
+					next.startTime,
+					next.endTime,
+				)
+			) {
+				throw new AppError(
+					`Slots at indexes ${i} and ${j} overlap on weekday ${current.weekday}.`,
+					409,
+				);
+			}
+		}
+	}
+
+	const existingAvailabilities = await findAvailabilitiesByProfessional(
+		input.professionalId,
+	);
+
+	for (let i = 0; i < input.slots.length; i++) {
+		const slot = input.slots[i];
+		const conflictingExisting = existingAvailabilities.find((existing) => {
+			if (!existing.isActive || existing.weekday !== slot.weekday) {
+				return false;
+			}
+
+			return hasTimeOverlap(
+				slot.startTime,
+				slot.endTime,
+				existing.startTime,
+				existing.endTime,
+			);
+		});
+
+		if (conflictingExisting) {
+			throw new AppError(
+				`Slot at index ${i} overlaps an existing availability period.`,
+				409,
+			);
+		}
+	}
+
+	return createAvailabilitiesBulk(input);
 }
 
 export async function listProfessionalAvailabilities(professionalId: string) {

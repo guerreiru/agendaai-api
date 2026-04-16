@@ -1,5 +1,7 @@
-import { prisma } from "../lib/prisma.js";
+import { prisma } from '../lib/prisma.js';
+
 import type {
+	CreateBulkAvailabilityInput,
 	CreateAvailabilityInput,
 	UpdateAvailabilityInput,
 } from "../types/availability.js";
@@ -73,6 +75,24 @@ export async function createAvailability(data: CreateAvailabilityInput) {
 	return prisma.availability.create({
 		data,
 	});
+}
+
+export async function createAvailabilitiesBulk(
+	input: CreateBulkAvailabilityInput,
+) {
+	return prisma.$transaction(
+		input.slots.map((slot) =>
+			prisma.availability.create({
+				data: {
+					professionalId: input.professionalId,
+					weekday: slot.weekday,
+					startTime: slot.startTime,
+					endTime: slot.endTime,
+					isActive: slot.isActive ?? true,
+				},
+			}),
+		),
+	);
 }
 
 export async function updateAvailability(
