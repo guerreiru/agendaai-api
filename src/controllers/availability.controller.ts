@@ -1,20 +1,17 @@
 import type { NextFunction, Request, Response } from "express";
 import {
-	createProfessionalAvailability,
-	deleteProfessionalAvailabilityWithContext,
-	getAvailability,
-	listAllAvailabilities,
-	listProfessionalAvailabilities,
-	updateProfessionalAvailability,
-} from "../services/availability.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
-import { isString } from "../utils/isString.js";
+    createProfessionalAvailabilitiesBulk, createProfessionalAvailability,
+    deleteProfessionalAvailabilityWithContext, getAvailability, listAllAvailabilities,
+    listProfessionalAvailabilities, updateProfessionalAvailability
+} from '../services/availability.service.js';
+import { AppError } from '../utils/app-error.js';
+import { isString } from '../utils/isString.js';
 import {
-	validateCreateAvailabilityBody,
-	validateUpdateAvailabilityBody,
-} from "../validators/availability.validator.js";
+    validateCreateAvailabilityBody, validateCreateBulkAvailabilityBody,
+    validateUpdateAvailabilityBody
+} from '../validators/availability.validator.js';
 
+import type { UserRole } from "../types/user.js";
 export async function createAvailabilityController(
 	request: Request,
 	response: Response,
@@ -51,6 +48,28 @@ export async function listAvailabilitiesController(
 			actorRole: request.userRole as UserRole,
 		});
 		return response.status(200).json(availabilities);
+	} catch (error) {
+		next(error);
+	}
+}
+
+export async function createBulkAvailabilityController(
+	request: Request,
+	response: Response,
+	next: NextFunction,
+) {
+	try {
+		if (!request.userId || !request.userRole) {
+			throw new AppError("Authentication required.", 401);
+		}
+
+		const body = validateCreateBulkAvailabilityBody(request.body);
+		const availabilities = await createProfessionalAvailabilitiesBulk(body, {
+			actorId: request.userId,
+			actorRole: request.userRole as UserRole,
+		});
+
+		return response.status(201).json(availabilities);
 	} catch (error) {
 		next(error);
 	}
