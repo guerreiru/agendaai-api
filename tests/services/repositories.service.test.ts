@@ -1,5 +1,18 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
+import * as appointmentRepository from "../../src/repositories/appointment.repository";
+import * as availabilityRepository from "../../src/repositories/availability.repository";
+import * as companyRepository from "../../src/repositories/company.repository";
+import * as professionalServiceRepository from "../../src/repositories/professional-service.repository";
+import * as refreshSessionRepository from "../../src/repositories/refresh-session.repository";
+import {
+  ScheduleExceptionRepository,
+  scheduleExceptionRepository,
+} from "../../src/repositories/schedule-exception.repository";
+import * as serviceRepository from "../../src/repositories/service.repository";
+import * as userRepository from "../../src/repositories/user.repository";
+import { AppError } from "../../src/utils/app-error";
+
 const prismaMock = vi.hoisted(() => ({
   company: {
     findUnique: vi.fn(),
@@ -62,19 +75,6 @@ const prismaMock = vi.hoisted(() => ({
 vi.mock("../../src/lib/prisma", () => ({
   prisma: prismaMock,
 }));
-
-import * as appointmentRepository from "../../src/repositories/appointment.repository";
-import * as availabilityRepository from "../../src/repositories/availability.repository";
-import * as companyRepository from "../../src/repositories/company.repository";
-import * as professionalServiceRepository from "../../src/repositories/professional-service.repository";
-import * as refreshSessionRepository from "../../src/repositories/refresh-session.repository";
-import { AppError } from "../../src/utils/app-error";
-import {
-  ScheduleExceptionRepository,
-  scheduleExceptionRepository,
-} from "../../src/repositories/schedule-exception.repository";
-import * as serviceRepository from "../../src/repositories/service.repository";
-import * as userRepository from "../../src/repositories/user.repository";
 
 describe("repositories", () => {
   beforeEach(() => {
@@ -409,7 +409,16 @@ describe("repositories", () => {
         where: { id: "u-1" },
         omit: { password: true },
         include: {
-          ownedCompany: true,
+          ownedCompany: {
+            include: {
+              professionals: {
+                omit: {
+                  password: true,
+                },
+              },
+              services: true,
+            },
+          },
           professionalServices: true,
         },
       });

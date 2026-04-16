@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import {
   validateCreateAppointmentBody,
   validateUpdateAppointmentBody,
@@ -172,8 +173,10 @@ describe("validators", () => {
           timezone: " America/Sao_Paulo ",
         }),
       ).toEqual({
+        autoConfirm: false,
         name: "Empresa",
         slug: "empresa-x",
+        phone: null,
         ownerId: "owner-1",
         timezone: "America/Sao_Paulo",
       });
