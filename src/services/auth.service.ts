@@ -1,20 +1,19 @@
-import crypto from "node:crypto";
-import jwt from "jsonwebtoken";
-import {
-	createRefreshSession,
-	findActiveRefreshSessionByHash,
-	revokeRefreshSessionByHash,
-} from "../repositories/refresh-session.repository.js";
-import { findUserByEmail, findUserById } from "../repositories/user.repository.js";
-import type { JwtPayload, LoginBody } from "../types/auth.js";
-import { AppError } from "../utils/app-error.js";
-import { verifyPassword } from "../utils/password.js";
-import {
-	ACCESS_TOKEN_EXPIRES_IN_SECONDS,
-	getRefreshTokenExpiryDate,
-	hashRefreshToken,
-} from "../utils/refresh-token.js";
+import jwt from 'jsonwebtoken';
+import crypto from 'node:crypto';
 
+import {
+    createRefreshSession, findActiveRefreshSessionByHash,
+    revokeAllRefreshSessionsByUserId as revokeAllRefreshSessionsByUserIdRepository,
+    revokeRefreshSessionByHash
+} from '../repositories/refresh-session.repository.js';
+import { findUserByEmail, findUserById } from '../repositories/user.repository.js';
+import { AppError } from '../utils/app-error.js';
+import { verifyPassword } from '../utils/password.js';
+import {
+    ACCESS_TOKEN_EXPIRES_IN_SECONDS, getRefreshTokenExpiryDate, hashRefreshToken
+} from '../utils/refresh-token.js';
+
+import type { JwtPayload, LoginBody } from "../types/auth.js";
 function getRequiredSecret(envName: "JWT_SECRET" | "REFRESH_TOKEN_SECRET") {
 	const value = process.env[envName];
 	if (value && value.trim().length > 0) {
@@ -155,6 +154,12 @@ export async function refreshAccessToken(
 
 export async function revokeRefreshToken(token: string): Promise<void> {
 	await revokeRefreshSessionByHash(hashRefreshToken(token));
+}
+
+export async function revokeAllRefreshSessionsByUserId(
+	userId: string,
+): Promise<void> {
+	await revokeAllRefreshSessionsByUserIdRepository(userId);
 }
 
 export function isLegacyRefreshBodyEnabled(): boolean {

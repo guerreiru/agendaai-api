@@ -1,5 +1,5 @@
 import type { CookieOptions } from "express";
-import { REFRESH_TOKEN_EXPIRES_IN_MS } from "./refresh-token.js";
+import { REFRESH_TOKEN_EXPIRES_IN_MS } from './refresh-token.js';
 
 export const REFRESH_COOKIE_NAME = "refresh_token";
 
@@ -10,7 +10,7 @@ export function getRefreshCookieBaseOptions(): CookieOptions {
 		httpOnly: true,
 		secure: isProd,
 		sameSite: isProd ? "none" : "lax",
-		path: "/auth/refresh",
+		path: "/auth",
 	};
 }
 
