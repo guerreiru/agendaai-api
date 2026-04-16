@@ -6,6 +6,11 @@ export type CreateAvailabilityInput = {
 	isActive?: boolean;
 };
 
+export type CreateBulkAvailabilityInput = {
+	professionalId: string;
+	slots: Omit<CreateAvailabilityInput, "professionalId">[];
+};
+
 export type UpdateAvailabilityInput = {
 	weekday?: number;
 	startTime?: string;
@@ -14,5 +19,7 @@ export type UpdateAvailabilityInput = {
 };
 
 export type CreateAvailabilityBody = CreateAvailabilityInput;
+
+export type CreateBulkAvailabilityBody = CreateBulkAvailabilityInput;
 
 export type UpdateAvailabilityBody = UpdateAvailabilityInput;
