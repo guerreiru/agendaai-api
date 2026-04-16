@@ -1,9 +1,9 @@
-import { Router } from "express";
+import { Router } from 'express';
+
 import {
-	getCompanyDashboardController,
-	getProfessionalMeDashboardController,
-} from "../controllers/dashboard.controller.js";
-import { authMiddleware, requireRoles } from "../middlewares/auth.middleware.js";
+    getCompanyDashboardController, getProfessionalMeDashboardController
+} from '../controllers/dashboard.controller.js';
+import { authMiddleware, requireRoles } from '../middlewares/auth.middleware.js';
 
 const router: Router = Router();
 
