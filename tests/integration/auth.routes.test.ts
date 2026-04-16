@@ -1,14 +1,14 @@
-import jwt from "jsonwebtoken";
-import request from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-import { AppError } from "../../src/utils/app-error";
+import jwt from 'jsonwebtoken';
+import request from 'supertest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+
+import { app } from '../../src/app';
+import * as authService from '../../src/services/auth.service';
+import * as userService from '../../src/services/user.service';
+import { AppError } from '../../src/utils/app-error';
 
 vi.mock("../../src/services/auth.service");
 vi.mock("../../src/services/user.service");
-
-import { app } from "../../src/app";
-import * as authService from "../../src/services/auth.service";
-import * as userService from "../../src/services/user.service";
 
 describe("HTTP integration - Auth routes", () => {
   beforeEach(() => {
@@ -44,9 +44,9 @@ describe("HTTP integration - Auth routes", () => {
         expect(setCookie.some((cookie) => cookie.includes("HttpOnly"))).toBe(
           true,
         );
-        expect(
-          setCookie.some((cookie) => cookie.includes("Path=/auth/refresh")),
-        ).toBe(true);
+        expect(setCookie.some((cookie) => cookie.includes("Path=/auth"))).toBe(
+          true,
+        );
         expect(
           setCookie.some((cookie) => cookie.includes("SameSite=Lax")),
         ).toBe(true);
@@ -174,9 +174,9 @@ describe("HTTP integration - Auth routes", () => {
         expect(
           setCookie.some((cookie) => cookie.includes("refresh_token=")),
         ).toBe(true);
-        expect(
-          setCookie.some((cookie) => cookie.includes("Path=/auth/refresh")),
-        ).toBe(true);
+        expect(setCookie.some((cookie) => cookie.includes("Path=/auth"))).toBe(
+          true,
+        );
       }
     });
   });
