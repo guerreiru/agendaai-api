@@ -1,8 +1,8 @@
 import type { NextFunction, Request, Response } from "express";
-import { verifyAccessToken } from "../services/auth.service.js";
-import type { UserRole } from "../types/user.js";
-import { AppError } from "../utils/app-error.js";
+import { verifyAccessToken } from '../services/auth.service.js';
+import { AppError } from '../utils/app-error.js';
 
+import type { UserRole } from "../types/user.js";
 declare global {
 	namespace Express {
 		interface Request {
@@ -50,12 +50,12 @@ export function optionalAuthMiddleware(
 	try {
 		const authHeader = request.headers.authorization;
 
-		if (!authHeader?.startsWith("Bearer ")) {
+		if (!authHeader) {
 			return next();
 		}
 
 		if (!authHeader?.startsWith("Bearer ")) {
-			throw new Error("Invalid authorization header");
+			throw new AppError("Missing or invalid authorization header.", 401);
 		}
 
 		const token = authHeader.substring(7);
@@ -66,8 +66,8 @@ export function optionalAuthMiddleware(
 		request.userRole = payload.role ?? payload.userRole;
 
 		next();
-	} catch (_error) {
-		next();
+	} catch (error) {
+		next(error);
 	}
 }
 
